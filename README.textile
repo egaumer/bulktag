@@ -1,0 +1,58 @@
+h1. ElasticSearch BulkTag Plugin
+
+h2. Update your index on-demand.
+
+h3. how to build this plugin?
+
+** specify elasticsearch version
+
+by edit pom.xml,you can specify the elasticsearch version you are using.
+
+<pre>
+...
+<elasticsearch.version>0.16.2</elasticsearch.version>
+...
+</pre>
+
+** maven build
+
+<pre>
+mvn clean
+mvn package
+</pre>
+
+** install the plugin
+
+*** drop the jar file to your elasticsearch plugin folder:
+elasticsearch/plugin/bulktag/
+
+*** if your version >=0.17,you can install the plugin like this:
+
+<pre>
+$ES_HOME/bin/plugin -url ./target -install bulktag
+</pre>
+
+h3. how to play with this plguin?
+
+** start by indexing some doucuments
+
+<pre>
+curl -XPOST http://localhost:9200/index/type1/1/ -d'{"name":"doc1"}'
+curl -XPOST http://localhost:9200/index/type1/2/ -d'{"name":"doc2"}'
+curl -XPOST http://localhost:9200/index/type1/3/ -d'{"name":"doc3"}'
+</pre>
+
+** do a search and verify things were indexed
+
+<pre>
+curl 'http://localhost:9200/index/type1/_search?q=*&pretty=true'
+</pre>
+
+** Now, we'll tag every document
+
+<pre>
+curl -XPOST http://localhost:9200/_bulktag -d '{"tags":["red","blue","green"]}'
+</pre>
+
+** perform another search and you should see every document now contains the tag field
+
