@@ -1,6 +1,7 @@
 h1. ElasticSearch BulkTag Plugin
 
 h2. Perform Bulk Partial updates to indexed documents
+
 This plugin will bulk-update every document in the index with the data it recieves.
 
 h3. How do you build this plugin?
