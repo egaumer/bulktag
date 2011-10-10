@@ -112,7 +112,7 @@ public class BulkTagRestAction extends BaseRestHandler {
             boolean hitsRead = false;
             BulkRequest bulkRequest = Requests.bulkRequest();
 
-            // for each segment (100 x shard_count)
+            // for each segment (10000 x shard_count)
             for (SearchHit hit : scrollResp.getHits()) {
                 hitsRead = true;
                 final Map<String,Object> doc = hit.sourceAsMap();

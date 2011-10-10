@@ -1,40 +1,37 @@
 h1. ElasticSearch BulkTag Plugin
 
-h2. Update your index on-demand.
+h2. Perform Bulk Partial updates to indexed documents
+This plugin will bulk-update every document in the index with the data it recieves.
 
-h3. how to build this plugin?
+h3. How do you build this plugin?
 
-** specify elasticsearch version
-
-by edit pom.xml,you can specify the elasticsearch version you are using.
+Start by specifying the elasticsearch version in the pom.xml.
 
 <pre>
 ...
-<elasticsearch.version>0.16.2</elasticsearch.version>
+<elasticsearch.version>0.17.7</elasticsearch.version>
 ...
 </pre>
 
-** maven build
+Use maven to build the package
 
 <pre>
-mvn clean
 mvn package
 </pre>
 
-** install the plugin
-
-*** drop the jar file to your elasticsearch plugin folder:
-elasticsearch/plugin/bulktag/
-
-*** if your version >=0.17,you can install the plugin like this:
+Then install the plugin
 
 <pre>
+# if you've built it locally
 $ES_HOME/bin/plugin -url ./target -install bulktag
+
+# if you just want to install the pre-built package from github
+$ES_HOME/bin/plugin install egaumer/bulktag
 </pre>
 
-h3. how to play with this plguin?
+h3. How to use this plugin.
 
-** start by indexing some doucuments
+Start by indexing some sample doucuments
 
 <pre>
 curl -XPOST http://localhost:9200/index/type1/1/ -d'{"name":"doc1"}'
@@ -42,17 +39,20 @@ curl -XPOST http://localhost:9200/index/type1/2/ -d'{"name":"doc2"}'
 curl -XPOST http://localhost:9200/index/type1/3/ -d'{"name":"doc3"}'
 </pre>
 
-** do a search and verify things were indexed
+Use a search and verify things were indexed
 
 <pre>
 curl 'http://localhost:9200/index/type1/_search?q=*&pretty=true'
 </pre>
 
-** Now, we'll tag every document
+To add a set of tags to each of these documents, POST to the new endpoint.
 
 <pre>
 curl -XPOST http://localhost:9200/_bulktag -d '{"tags":["red","blue","green"]}'
 </pre>
 
-** perform another search and you should see every document now contains the tag field
+Perform another search and verify the documents were all updated.
+
+*Note*
+This HTTP call is asynchornous meaning the call will start the update and immediately return. If you are updating a large number of documents, it could take several minutes (or longer) to actually complete. Yoi can watch the logs to track progress and look for failures.
 
